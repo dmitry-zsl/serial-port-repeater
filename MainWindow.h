@@ -6,6 +6,7 @@
 #include <QList>
 #include <QTimer>
 #include <QElapsedTimer>
+#include <QFile>
 
 namespace Ui {
 class MainWindow;

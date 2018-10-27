@@ -48,8 +48,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&m_guiTimer, SIGNAL(timeout()), this, SLOT(on_needUpdGui()));
     m_guiTimer.start(500);
-
-    if (ui->cbDumpIn->isChecked()) OpenF();
 }
 
 MainWindow::~MainWindow()
@@ -266,6 +264,11 @@ bool MainWindow::Start()
     m_cnt_i_wr=m_cnt_o1_wr=m_cnt_o2_wr=0;
     m_cnt_i_wr_old=m_cnt_o1_wr_old=m_cnt_o2_wr_old=0;
     m_cnt_i_wr_err=m_cnt_o1_wr_err=m_cnt_o2_wr_err=0;
+    if (ui->cbDumpIn->isChecked()) {
+        if (!OpenF()) {
+            QMessageBox::critical(this, tr("Error"), tr("Can't open dump file for write"), QMessageBox::Ok);
+        }
+    }
     return true;
 }
 
@@ -275,6 +278,10 @@ bool MainWindow::Stop()
     if (m_portOut1.isOpen()) m_portOut1.close();
     if (m_portOut2.isOpen()) m_portOut2.close();
     m_started = false;
+    if (m_f_In_dump.isOpen()) {
+        m_f_In_dump.flush();
+        m_f_In_dump.close();
+    }
     return true;
 }
 

@@ -1,13 +1,3 @@
-/*!
- * \file MainWindow.h
- * \brief Brief
- *
- * Long
- * Description
- *
- * \date 26.10.2018
- * \author Королев Дмитрий <d.v.korolev@inbox.ru>
- */
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -42,6 +32,8 @@ private slots:
     void on_cbxOut2ToIn_stateChanged(int arg1);
 
     void on_needUpdGui();
+
+    void on_cbDumpIn_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;
@@ -80,6 +72,9 @@ private:
     quint64 m_cnt_i_wr_err, m_cnt_o1_wr_err, m_cnt_o2_wr_err;
 
     QElapsedTimer m_elapsed;
+
+    QFile m_f_In_dump;
+    bool OpenF();
 };
 
 #endif // MAINWINDOW_H

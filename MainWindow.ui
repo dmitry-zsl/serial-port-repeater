@@ -183,28 +183,28 @@
              </property>
             </widget>
            </item>
-           <item row="11" column="0" colspan="2">
+           <item row="12" column="0" colspan="2">
             <widget class="QCheckBox" name="cbxIn2Out1">
              <property name="text">
               <string>Input -&gt; Output 1</string>
              </property>
             </widget>
            </item>
-           <item row="12" column="0" colspan="2">
+           <item row="13" column="0" colspan="2">
             <widget class="QCheckBox" name="cbxIn2Out2">
              <property name="text">
               <string>Input -&gt; Output 2</string>
              </property>
             </widget>
            </item>
-           <item row="13" column="0" colspan="2">
+           <item row="14" column="0" colspan="2">
             <widget class="QCheckBox" name="cbxOut1ToIn">
              <property name="text">
               <string>Output 1 -&gt; Input</string>
              </property>
             </widget>
            </item>
-           <item row="14" column="0" colspan="2">
+           <item row="15" column="0" colspan="2">
             <widget class="QCheckBox" name="cbxOut2ToIn">
              <property name="text">
               <string>Output 2 -&gt; Input</string>
@@ -231,6 +231,13 @@
             <widget class="QLabel" name="lblInWriteErrorsLabel">
              <property name="text">
               <string>Write errors</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0" colspan="2">
+            <widget class="QCheckBox" name="cbDumpIn">
+             <property name="text">
+              <string>Dump to file</string>
              </property>
             </widget>
            </item>

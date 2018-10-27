@@ -1,13 +1,3 @@
-/*!
- * \file MainWindow.cpp
- * \brief Brief
- *
- * Long
- * Description
- *
- * \date 26.10.2018
- * \author Королев Дмитрий <d.v.korolev@inbox.ru>
- */
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include <QtSerialPort/QSerialPortInfo>
@@ -19,13 +9,15 @@
 #include <QDebug>
 #include <QSignalBlocker>
 #include <QLocale>
+#include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),m_cnt_i_rd(0), m_cnt_o1_rd(0), m_cnt_o2_rd(0),
     m_cnt_i_rd_old(0), m_cnt_o1_rd_old(0), m_cnt_o2_rd_old(0),
     m_cnt_i_wr(0), m_cnt_o1_wr(0), m_cnt_o2_wr(0),
-    m_cnt_i_wr_old(0), m_cnt_o1_wr_old(0), m_cnt_o2_wr_old(0)
+    m_cnt_i_wr_old(0), m_cnt_o1_wr_old(0), m_cnt_o2_wr_old(0),
+    m_cnt_i_wr_err(0), m_cnt_o1_wr_err(0), m_cnt_o2_wr_err(0)
 {
     ui->setupUi(this);
 
@@ -56,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&m_guiTimer, SIGNAL(timeout()), this, SLOT(on_needUpdGui()));
     m_guiTimer.start(500);
+
+    if (ui->cbDumpIn->isChecked()) OpenF();
 }
 
 MainWindow::~MainWindow()
@@ -89,6 +83,9 @@ void MainWindow::on_InDataReady()
             qint64 ws = m_portOut2.write(data);
             if (ws>-1) m_cnt_o2_wr += ws;
             else ++m_cnt_o1_wr_err;
+        }
+        if (m_f_In_dump.isOpen()) {
+            m_f_In_dump.write(data);
         }
     }
 }
@@ -281,6 +278,22 @@ bool MainWindow::Stop()
     return true;
 }
 
+bool MainWindow::OpenF()
+{
+    QString dir = QDir::currentPath() + "/dumps";
+    QDir d(dir);
+    if (!d.exists(dir)) {
+        d.mkdir(dir);
+    }
+    dir += "/" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss") + ".dump";
+    m_f_In_dump.setFileName(dir);
+    if (m_f_In_dump.open(QIODevice::WriteOnly)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 void MainWindow::on_pbStart_clicked()
 {
@@ -385,4 +398,17 @@ void MainWindow::on_needUpdGui()
     ui->lblInWriteErrors->setText(currentLocale.toString(m_cnt_i_wr_err));
     ui->lblOut1WriteErrors->setText(currentLocale.toString(m_cnt_o1_wr_err));
     ui->lblOut2WriteErrors->setText(currentLocale.toString(m_cnt_o2_wr_err));
+}
+
+void MainWindow::on_cbDumpIn_stateChanged(int arg1)
+{
+    if (arg1 && !m_f_In_dump.isOpen()) {
+        if (!OpenF()) {
+            QMessageBox::critical(this, tr("Error"), tr("Can't open dump file for write"), QMessageBox::Ok);
+        }
+    }
+    if (!arg1) {
+        m_f_In_dump.flush();
+        m_f_In_dump.close();
+    }
 }

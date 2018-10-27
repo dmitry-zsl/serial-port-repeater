@@ -1,13 +1,3 @@
-/*!
- * \file main.cpp
- * \brief Brief
- *
- * Long
- * Description
- *
- * \date 26.10.2018
- * \author Королев Дмитрий <d.v.korolev@inbox.ru>
- */
 #include "MainWindow.h"
 #include <QApplication>
 
